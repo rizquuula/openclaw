@@ -211,6 +211,7 @@ vi.mock("../../tasks/runtime-internal.js", () => ({
 }));
 
 vi.mock("../../infra/agent-events.js", () => ({
+  registerAgentEventLifecycleRotationHandler: vi.fn(),
   rotateAgentEventLifecycleGeneration: () => rotateAgentEventLifecycleGeneration(),
 }));
 

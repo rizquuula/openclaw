@@ -59,6 +59,7 @@ vi.mock("../tasks/task-status-access.js", () => ({
 vi.mock("../infra/agent-events.js", () => ({
   getAgentRunContext: vi.fn(() => undefined),
   onAgentEvent: vi.fn((_handler: unknown) => noop),
+  registerAgentEventLifecycleRotationHandler: vi.fn(),
 }));
 
 vi.mock("../config/config.js", async () => {

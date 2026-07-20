@@ -97,6 +97,7 @@ vi.mock("../agents/btw.js", () => ({
 }));
 
 vi.mock("../infra/agent-events.js", () => ({
+  registerAgentEventLifecycleRotationHandler: vi.fn(),
   onAgentEvent: (listener: (evt: unknown) => void) => {
     registeredListener = listener;
     return () => {

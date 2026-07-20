@@ -30,6 +30,7 @@ const agentEventMocks = vi.hoisted(() => {
       handlers.add(handler);
       return () => handlers.delete(handler);
     }),
+    registerAgentEventLifecycleRotationHandler: vi.fn(),
     registerAgentRunContext: vi.fn(),
     withAgentRunLifecycleGeneration: vi.fn((_generation: string, run: () => unknown) => run()),
   };

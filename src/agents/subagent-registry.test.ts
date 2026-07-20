@@ -213,6 +213,7 @@ vi.mock("../gateway/call.js", () => ({
 vi.mock("../infra/agent-events.js", () => ({
   getAgentRunContext: mocks.getAgentRunContext,
   onAgentEvent: mocks.onAgentEvent,
+  registerAgentEventLifecycleRotationHandler: vi.fn(),
 }));
 
 vi.mock("../config/config.js", () => {

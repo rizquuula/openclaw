@@ -17,6 +17,7 @@ vi.mock("../config/sessions/session-accessor.js", () => ({
 }));
 vi.mock("../infra/agent-events.js", () => ({
   getAgentEventLifecycleGeneration: () => "current-generation",
+  registerAgentEventLifecycleRotationHandler: vi.fn(),
 }));
 vi.mock("../infra/session-delivery-queue.js", () => ({
   loadPendingSessionDeliveries: mocks.loadPendingSessionDeliveries,
