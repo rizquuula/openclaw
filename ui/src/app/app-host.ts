@@ -106,10 +106,10 @@ import {
   prepareStaleBundleAutoReload,
   prepareStaleBundleManualReload,
   readGatewayVersionFromSnapshot,
-  resolveStaleBundleGatewayVersion,
   resolveStaleBundleReloadPair,
   StaleBundleReloadController,
   type StaleBundleReloadTarget,
+  type StaleBundleVersionPair,
 } from "./stale-bundle.ts";
 
 type ShellRouteState = {
@@ -1244,18 +1244,22 @@ class OpenClawShell extends OpenClawLightDomElement {
   }
 
   private synchronizeGateway(snapshot: ApplicationContext["gateway"]["snapshot"]) {
-    const gatewayVersion = readGatewayVersionFromSnapshot(snapshot.hello?.snapshot);
-    this.staleBundleReload.update(
-      snapshot.connected
-        ? resolveStaleBundleReloadPair({
-            gatewayUrl: this.context?.gateway.connection.gatewayUrl ?? "",
-            gatewayVersion,
-          })
-        : null,
-    );
+    this.staleBundleReload.update(this.resolveActionableStaleBundlePair(snapshot));
     this.updateGatewaySessionKey(snapshot);
     this.ensureAgentsList(snapshot);
     this.ensureRuntimeConfig(snapshot);
+  }
+
+  private resolveActionableStaleBundlePair(
+    snapshot: ApplicationContext["gateway"]["snapshot"],
+  ): StaleBundleVersionPair | null {
+    if (!snapshot.connected) {
+      return null;
+    }
+    return resolveStaleBundleReloadPair({
+      gatewayUrl: this.context?.gateway.connection.gatewayUrl ?? "",
+      gatewayVersion: readGatewayVersionFromSnapshot(snapshot.hello?.snapshot),
+    });
   }
 
   private prepareForStaleBundleReload(): boolean {
@@ -1408,9 +1412,8 @@ class OpenClawShell extends OpenClawLightDomElement {
       return nothing;
     }
     const gatewaySnapshot = context.gateway.snapshot;
-    const staleBundleGatewayVersion = resolveStaleBundleGatewayVersion(
-      readGatewayVersionFromSnapshot(gatewaySnapshot.hello?.snapshot),
-    );
+    const staleBundleGatewayVersion =
+      this.resolveActionableStaleBundlePair(gatewaySnapshot)?.gatewayVersion ?? null;
     const navigationSnapshot = context.navigation.snapshot;
     const overlaySnapshot = context.overlays.snapshot;
     const terminalAvailable = isTerminalAvailable(
